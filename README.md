@@ -22,28 +22,39 @@ This is a regression task since we are trying to predict the Purchase Amount. Re
 
 On this project, Artificial Neural Networks will be used to predict the Purchase Amount.
 
-## Installation
+## Installation and Running the Code
 
-To set up this project on your local machine, follow these steps:
+To run the code in this project, follow these steps:
 
-1. Clone the repository
+1. **Clone the repository**: Clone this repository to your local machine. You can do this by running the following command in your terminal:
 
-2. Navigate to the project directory
-
-3. Install the required dependencies
+    ```sh
+    git clone <repository-url>
     ```
+
+    Replace `<repository-url>` with the URL of this repository.
+
+2. **Navigate to the project directory**: You can 
+use the `cd` command to navigate to the directory where you cloned the repository. For example:
+
+    ```sh
+    cd path/to/project
+    ```
+
+    Replace `path/to/project` with the actual path to the project directory.
+
+3. **Set up the environment**: Make sure you have Python installed on your machine. You can download Python from [here](https://www.python.org/downloads/). Also, install the required dependencies by running the following commands in your terminal:
+
+    ```sh
+    python -m venv env
+    .\env\Scripts\activate
     pip install -r requirements.txt
     ```
 
-
-## Building the Artificial Neural Network with Keras
-
-We build a model using Keras and add layers to it. The quantity of layers and neurons within those layers can greatly affect the model's performance and ability to generalize from the training data. The layers in between the input and output layers are known as hidden layers. Each layer attempts to learn different features of the dataset.
-
-Obs:
-- If you have too few layers, the network might not be able to learn complex patterns from the data (underfitting). 
-
-- If you have too many layers, the network might start to learn not just the underlying patterns, but also the noise in the data (overfitting).
+4. **Run the script**: Finally, you can:
+    - Navigate to the Jupyter tab on the left sidebar;
+    - Click on your notebook file to open it;
+    - Use the VSCode Jupyter interface to run the cells in your notebook.
 
 
 ## Data Normalization
@@ -51,11 +62,37 @@ Obs:
 In the code, we use the `MinMaxScaler` class from the `sklearn.preprocessing` module to normalize our data. It transforms features by scaling each feature to a given range, typically between 0 and 1. This method first calculates the minimum and maximum value of each feature, and then transforms the feature to scale it between 0 and 1. This ensures that all features have the same scale, which can help the model converge more quickly and accurately. 
 
 Here's how we use it in the code:
+
 ```python
 scaler = MinMaxScaler()
 X_scaled = scaler.fit_transform(X)
 y_scaled = scaler.fit_transform(y.values.reshape(-1, 1))
 ```
+
+
+## Building the Artificial Neural Network
+
+In this project, we build an Artificial Neural Network (ANN) using Keras. The ANN is composed of an input layer, several hidden layers, and an output layer. Each layer is made up of neurons (also known as nodes), and the neurons of adjacent layers are fully connected.
+
+Here's a brief overview of the structure of our ANN:
+
+- ```Input Layer```: The **input** layer has as many neurons as there are features in our dataset. Each neuron represents a unique feature.
+
+- ```Hidden Layers```: The layers in between the **input** and **output** layers are known as **hidden layers**. Our ANN has two hidden layers. The first and the second hidden layer have 25 neurons. The number of hidden layers and the number of neurons in each layer are hyperparameters of the ANN. These hyperparameters can greatly affect the model's performance and ability to generalize from the training data.
+
+    **Obs**:
+    - If you have too few layers, the network might not be able to learn complex patterns from the data (underfitting). 
+
+    - If you have too many layers, the network might start to learn not just the underlying patterns, but also the noise in the data (overfitting).
+
+- ```Output Layer```: The **output layer** has one neuron as we are performing a regression task (predicting a single continuous value). The output layer uses the linear activation function, which is typical for regression tasks.
+
+Choosing the right number of hidden layers and neurons in each layer involves a lot of trial and error. However, there are some general guidelines that can help:
+
+- **Number of Hidden Layers**: For many problems, a single hidden layer is sufficient. However, if the problem is complex, such as image recognition or natural language processing, more hidden layers can help the model learn more complex representations. In our case, two hidden layers worked well.
+
+- **Number of Neurons**: A common strategy is to choose a number of neurons that is between the size of the input layer (the number of features) and the size of the output layer. For example, if you have 10 input features and 1 output, you might choose something between 10 and 1 for the number of neurons in the hidden layers. Another common strategy is to start with a large number of neurons and gradually reduce it if you see that the model is overfitting (performing well on the training data but poorly on the test data).
+
 
 ## Model Training
 
@@ -73,11 +110,13 @@ The model is trained using the `model.fit()` function from Keras, which has the 
     ```
 
 #### Choosing Parameters
+
 - `epochs`: Too many epochs can lead to overfitting of the training dataset, whereas too few may result in an underfit model. A good choice is to monitor the performance of the model during training and stop training when the performance on a holdout dataset starts to degrade.
 - `batch_size`: Smaller batch sizes can be noisy, offering a regularizing effect and lower generalization error. Larger batch sizes offer more stable learning and convergence in the weights and a more accurate estimate of the gradient, but have the risk of not being able to escape from local minima. Experiment with different batch sizes and choose the one that offers the best trade-off between computational efficiency and model performance.
 - `validation_split`: It's common to use 20-30% of the training data for validation. However, if you have a large dataset, you might need a smaller validation split. If your dataset is small, a larger split might be necessary.
 
 #### Output
+
 - `loss`: This is the value of the loss function for the training data. The model's objective is to minimize this function.
 
 - `val_loss`: This is the value of the loss function for the validation data. After each epoch, the model checks its performance on the validation data, which gives you an idea of how well the model generalizes to unseen data.
@@ -113,19 +152,26 @@ Once the model is trained, we can use it to predict the purchase amount for a ne
 1. Create a new array with the customer's features. 
 2. The features should be in the same order as in the training data ```]'Gender', 'Age', 'Annual Salary', 'Credit Card Debt', 'Net Worth']```
 3. Your array will be something like this:
+
    ```python
    X_my_new_customer = np.array([[1, 25, 50000, 10000, 250000]])
    ```
+
 4. In this example, the new customer is a 25-year-old female with an annual salary of $50,000, a credit card debt of $10,000, and a net worth of $250,000.
 5. You can use the ```predict``` method of the model to predict the purchase amount:
+
     ```python
     y_predict = model.predict(X_my_new_customer)
     ```
+
 6. The predict method returns a 2D array, so you can get the predicted purchase amount like this:
+
     ```python
     purchase_amount = int(y_predict[0][0])
     ```
+
 7. Now you can print the predicted purchase amount:
+
     ```python
     print(f"New customer's Purchase Amount Prediction: USD {purchase_amount}")
     ```
